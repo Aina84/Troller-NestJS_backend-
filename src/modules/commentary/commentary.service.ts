@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCommentaryDto } from './dto/create-commentary.dto';
 import { UpdateCommentaryDto } from './dto/update-commentary.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Commentary } from './entities/commentary.entity';
 
 @Injectable()
 export class CommentaryService {
+  constructor(
+    @InjectRepository(Commentary)
+    private commentariesRepository : Repository<Commentary>
+  ){}
+  
   create(createCommentaryDto: CreateCommentaryDto) {
-    return 'This action adds a new commentary';
+    const commentary = this.commentariesRepository.create(createCommentaryDto);
+    return this.commentariesRepository.save(commentary);
   }
 
-  findAll() {
-    return `This action returns all commentary`;
+  async findAll() : Promise<Commentary[]> {
+    return await this.commentariesRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} commentary`;
+  async findOne(id: number) : Promise<Commentary | null> {
+    return await this.commentariesRepository.findOneBy({id});
   }
 
-  update(id: number, updateCommentaryDto: UpdateCommentaryDto) {
-    return `This action updates a #${id} commentary`;
+  async update(id: number, updateCommentaryDto: UpdateCommentaryDto) : Promise<Commentary | null> {
+    await this.commentariesRepository.update(id,updateCommentaryDto)
+    return await this.commentariesRepository.findOneBy({id});
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} commentary`;
+  async remove(id: number) {
+    return await this.commentariesRepository.delete(id);
   }
 }

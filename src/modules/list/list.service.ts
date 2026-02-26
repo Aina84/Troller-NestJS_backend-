@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { CreateListDto } from './dto/create-list.dto';
 import { UpdateListDto } from './dto/update-list.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { List } from './entities/list.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ListService {
-  create(createListDto: CreateListDto) {
-    return 'This action adds a new list';
+  constructor(
+    @InjectRepository(List)
+    private listsRepository : Repository<List>
+  ){}
+  async create(createListDto: CreateListDto) : Promise<List> {
+    const newList = this.listsRepository.create({...createListDto, createdAt: (new Date()).toLocaleDateString()})
+    return this.listsRepository.save(newList);
   }
 
-  findAll() {
-    return `This action returns all list`;
+  async findAll() : Promise<List[]> {
+    return this.listsRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} list`;
+  async findOne(id: number) : Promise<List | null> {
+    return this.listsRepository.findOneBy({id});
   }
 
-  update(id: number, updateListDto: UpdateListDto) {
-    return `This action updates a #${id} list`;
+  async update(id: number, updateListDto: UpdateListDto) : Promise<List | null> {
+    const result = await this.listsRepository.update(id, updateListDto);
+    return result.affected > 0 ? this.listsRepository.findOneBy({id}) : null;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} list`;
+  async remove(id: number) : Promise<boolean> {
+    const result = await this.listsRepository.delete(id);
+    return typeof result.affected == 'number' ? result.affected > 0 : false ;
   }
 }

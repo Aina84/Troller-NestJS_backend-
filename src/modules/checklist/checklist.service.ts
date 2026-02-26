@@ -1,26 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { CreateChecklistDto } from './dto/create-checklist.dto';
 import { UpdateChecklistDto } from './dto/update-checklist.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Checklist } from './entities/checklist.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ChecklistService {
+  constructor(
+    @InjectRepository(Checklist)
+    private checkListsRepository : Repository<Checklist>
+  ){}
+
   create(createChecklistDto: CreateChecklistDto) {
-    return 'This action adds a new checklist';
+    const checklist = this.checkListsRepository.create(createChecklistDto);
+    return this.checkListsRepository.save(checklist);
   }
 
-  findAll() {
-    return `This action returns all checklist`;
+  async findAll(): Promise<Checklist[]> {
+    return await this.checkListsRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} checklist`;
+  async findOne(id: number): Promise<Checklist> {
+    return await this.checkListsRepository.findOneBy({id});
   }
 
-  update(id: number, updateChecklistDto: UpdateChecklistDto) {
-    return `This action updates a #${id} checklist`;
+  async update(id: number, updateChecklistDto: UpdateChecklistDto) : Promise<Checklist | null> {
+    const result = await this.checkListsRepository.update(id, updateChecklistDto);
+    return result.affected>0 ? this.checkListsRepository.findOneBy({id}) : null;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} checklist`;
+  async remove(id: number) {
+    const result = await this.checkListsRepository.delete(id);  
+    return result.affected > 0;
   }
 }

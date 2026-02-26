@@ -1,26 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTableDto } from './dto/create-table.dto';
 import { UpdateTableDto } from './dto/update-table.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Table } from './entities/table.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class TableService {
-  create(createTableDto: CreateTableDto) {
-    return 'This action adds a new table';
+  constructor (
+    @InjectRepository(Table)
+    private tablesRepository : Repository<Table>
+  ){}
+  
+  async create(createTableDto: CreateTableDto) {
+    const newTable = await this.tablesRepository.create({...createTableDto, createdAt: (new Date()).toLocaleDateString()});
+    return this.tablesRepository.save(newTable);
   }
 
-  findAll() {
-    return `This action returns all table`;
+  async findAll() : Promise<Table[]> {
+    return this.tablesRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} table`;
+  async findOne(id: number) : Promise<Table | null> {
+    return this.tablesRepository.findOneBy({id});
   }
 
-  update(id: number, updateTableDto: UpdateTableDto) {
-    return `This action updates a #${id} table`;
+  async update(id: number, updateTableDto: UpdateTableDto) : Promise<Table | null> {
+    const result = await this.tablesRepository.update(id, updateTableDto);
+    return result.affected > 0 ? this.tablesRepository.findOneBy({id}) : null;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} table`;
+  async remove(id: number) : Promise<boolean> {
+    const result = await this.tablesRepository.delete(id);
+    return typeof result.affected == 'number' ? result.affected > 0 : false ;
   }
 }

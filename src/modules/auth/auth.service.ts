@@ -28,16 +28,13 @@ export class AuthService {
         }
         
         const payload = { email: user.email, sub: user.id };
+        const { password, ...result } = user;
         
         return {
             access_token: this.jwtService.sign(payload),
-            user: {
-                id: user.id,
-                email: user.email,
-                name: user.name,
+            user: result
             }
         };
-    }
 
     async register(registerUserDto: RegisterUserDto): Promise<any> {
         const existingUser = await this.userService.findOneByEmail(registerUserDto.email);

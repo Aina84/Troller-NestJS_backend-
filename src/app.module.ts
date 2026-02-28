@@ -14,7 +14,8 @@ import { MemberModule } from './modules/member/member.module';
 import { ActivityModule } from './modules/activity/activity.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { User } from './modules/user/entities/user.entity';
-
+import { config } from 'dotenv'
+config();
 const TypeOrmM = TypeOrmModule.forRoot({
   type: 'postgres',
   host: process.env.DB_HOST || 'localhost',

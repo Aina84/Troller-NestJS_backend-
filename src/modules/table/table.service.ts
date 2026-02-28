@@ -21,6 +21,12 @@ export class TableService {
     return this.tablesRepository.find();
   }
 
+  async findAllByWorkspace(workspaceId: number) : Promise<Table[]> {
+    return this.tablesRepository.find({
+      where: {workspaceId}
+    });
+  }
+
   async findOne(id: number) : Promise<Table | null> {
     return this.tablesRepository.findOneBy({id});
   }

@@ -22,6 +22,11 @@ export class TableController {
     return this.tableService.findOne(+id);
   }
 
+  @Get('workspace/:workspaceId')
+  findAllByWorkspace(@Param('workspaceId') workspaceId: string) {
+    return this.tableService.findAllByWorkspace(+workspaceId);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateTableDto: UpdateTableDto) {
     return this.tableService.update(+id, updateTableDto);

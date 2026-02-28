@@ -12,7 +12,7 @@ export class WorkspaceService {
     private workspacesRepository : Repository<Workspace>
   ){}
   async create(createWorkspaceDto: CreateWorkspaceDto) : Promise<Workspace> {
-    const newWorkspace = this.workspacesRepository.create({...createWorkspaceDto, createdAt: (new Date()).toLocaleDateString()})
+    const newWorkspace = this.workspacesRepository.create({...createWorkspaceDto, createdAt: (new Date()).toISOString()})
     return await this.workspacesRepository.save(newWorkspace);
   }
 

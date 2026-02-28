@@ -12,7 +12,7 @@ export class ListService {
     private listsRepository : Repository<List>
   ){}
   async create(createListDto: CreateListDto) : Promise<List> {
-    const newList = this.listsRepository.create({...createListDto, createdAt: (new Date()).toLocaleDateString()})
+    const newList = this.listsRepository.create({...createListDto, createdAt: (new Date()).toISOString()})
     return this.listsRepository.save(newList);
   }
 

@@ -13,7 +13,7 @@ export class TableService {
   ){}
   
   async create(createTableDto: CreateTableDto) {
-    const newTable = await this.tablesRepository.create({...createTableDto, createdAt: (new Date()).toLocaleDateString()});
+    const newTable = await this.tablesRepository.create({...createTableDto, createdAt: (new Date()).toISOString()});
     return this.tablesRepository.save(newTable);
   }
 

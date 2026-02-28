@@ -19,7 +19,7 @@ export class UserService {
     const newUser = this.usersRepository.create({
       ...createUserDto,
       password: hashedPassword,
-      createdAt: (new Date()).toLocaleDateString()
+      createdAt: (new Date()).toISOString()
     });
     return await this.usersRepository.save(newUser);
   }

@@ -21,6 +21,18 @@ export class CardService {
     return await this.cardsRepository.find();
   }
 
+  async findAllByList(listId: number) {
+    return await this.cardsRepository.find({
+      where: {listId}
+    });
+  }
+
+  async findAllByTable(tableId: number) {
+    return await this.cardsRepository.find({
+      where: {tableId}
+    });
+  }
+
   async findOne(id: number) {
     return await this.cardsRepository.findOneBy({id});
   }

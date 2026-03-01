@@ -17,6 +17,16 @@ export class CardController {
     return this.cardService.findAll();
   }
 
+  @Get('list/:listId')
+  findAllByList(@Param('listId') listId: string) {
+    return this.cardService.findAllByList(+listId);
+  }
+
+  @Get('table/:tableId')
+  findAllByTable(@Param('tableId') tableId: string) {
+    return this.cardService.findAllByTable(+tableId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.cardService.findOne(+id);

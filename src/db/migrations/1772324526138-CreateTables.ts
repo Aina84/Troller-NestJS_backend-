@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class CreateTables1772089908319 implements MigrationInterface {
-    name = 'CreateTables1772089908319'
+export class CreateTables1772324526138 implements MigrationInterface {
+    name = 'CreateTables1772324526138'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE "table" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "position" integer NOT NULL DEFAULT '0', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "workspaceId" integer NOT NULL, CONSTRAINT "PK_28914b55c485fc2d7a101b1b2a4" PRIMARY KEY ("id"))`);
@@ -10,7 +10,7 @@ export class CreateTables1772089908319 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE "checklist" ("id" SERIAL NOT NULL, "title" character varying NOT NULL, "position" integer NOT NULL DEFAULT '0', "cardId" integer NOT NULL, CONSTRAINT "PK_e4b437f5107f2a9d5b744d4eb4c" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "label" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "color" character varying NOT NULL, "workspaceId" integer NOT NULL, CONSTRAINT "PK_5692ac5348861d3776eb5843672" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "member" ("id" SERIAL NOT NULL, "role" character varying, "assignedAt" TIMESTAMP NOT NULL DEFAULT now(), "cardId" integer NOT NULL, "userId" integer NOT NULL, CONSTRAINT "PK_97cbbe986ce9d14ca5894fdc072" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TABLE "card" ("id" SERIAL NOT NULL, "title" character varying NOT NULL, "description" character varying, "dueDate" TIMESTAMP, "position" integer NOT NULL DEFAULT '0', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "listId" integer NOT NULL, CONSTRAINT "PK_9451069b6f1199730791a7f4ae4" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "card" ("id" SERIAL NOT NULL, "title" character varying NOT NULL, "description" character varying, "dueDate" TIMESTAMP, "position" integer NOT NULL DEFAULT '0', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "listId" integer NOT NULL, "tableId" integer NOT NULL, CONSTRAINT "PK_9451069b6f1199730791a7f4ae4" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "commentary" ("id" SERIAL NOT NULL, "content" character varying NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "cardId" integer NOT NULL, "userId" integer NOT NULL, CONSTRAINT "PK_465979b97c47c504d1032b0e757" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "user" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "email" character varying NOT NULL, "password" character varying NOT NULL, "avatar" character varying NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "workspace" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "description" character varying, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "ownerId" integer, CONSTRAINT "PK_ca86b6f9b3be5fe26d307d09b49" PRIMARY KEY ("id"))`);
@@ -28,6 +28,7 @@ export class CreateTables1772089908319 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "member" ADD CONSTRAINT "FK_179daedf535345ae177ef69938e" FOREIGN KEY ("cardId") REFERENCES "card"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "member" ADD CONSTRAINT "FK_08897b166dee565859b7fb2fcc8" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "card" ADD CONSTRAINT "FK_4267e15872bbabeb7d9c0448ca0" FOREIGN KEY ("listId") REFERENCES "list"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE "card" ADD CONSTRAINT "FK_218b8bccd4b43f8cd114d76d169" FOREIGN KEY ("tableId") REFERENCES "table"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "commentary" ADD CONSTRAINT "FK_ac4241f79cc8986496f5336afd9" FOREIGN KEY ("cardId") REFERENCES "card"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "commentary" ADD CONSTRAINT "FK_bf8192a335436327d296b685dc2" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE SET NULL ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "workspace" ADD CONSTRAINT "FK_51f2194e4a415202512807d2f63" FOREIGN KEY ("ownerId") REFERENCES "user"("id") ON DELETE SET NULL ON UPDATE NO ACTION`);
@@ -45,6 +46,7 @@ export class CreateTables1772089908319 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "workspace" DROP CONSTRAINT "FK_51f2194e4a415202512807d2f63"`);
         await queryRunner.query(`ALTER TABLE "commentary" DROP CONSTRAINT "FK_bf8192a335436327d296b685dc2"`);
         await queryRunner.query(`ALTER TABLE "commentary" DROP CONSTRAINT "FK_ac4241f79cc8986496f5336afd9"`);
+        await queryRunner.query(`ALTER TABLE "card" DROP CONSTRAINT "FK_218b8bccd4b43f8cd114d76d169"`);
         await queryRunner.query(`ALTER TABLE "card" DROP CONSTRAINT "FK_4267e15872bbabeb7d9c0448ca0"`);
         await queryRunner.query(`ALTER TABLE "member" DROP CONSTRAINT "FK_08897b166dee565859b7fb2fcc8"`);
         await queryRunner.query(`ALTER TABLE "member" DROP CONSTRAINT "FK_179daedf535345ae177ef69938e"`);

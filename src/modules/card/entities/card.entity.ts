@@ -4,6 +4,7 @@ import { Checklist } from '../../checklist/entities/checklist.entity';
 import { Commentary } from '../../commentary/entities/commentary.entity';
 import { Label } from '../../label/entities/label.entity';
 import { Member } from '../../member/entities/member.entity';
+import { Table } from '../../table/entities/table.entity';
 
 @Entity()
 export class Card {
@@ -31,11 +32,18 @@ export class Card {
     @Column()
     listId: number;
 
+    @ManyToOne(() => Table, table => table.cards, { onDelete: 'CASCADE' })
+    table: Table;
+    
+    @Column()
+    tableId: number;
+
     @OneToMany(() => Checklist, checklist => checklist.card)
     checklists: Checklist[];
 
     @OneToMany(() => Commentary, commentary => commentary.card)
     commentaries: Commentary[];
+
 
     @ManyToMany(() => Label, label => label.cards)
     @JoinTable({ name: 'card_label' })

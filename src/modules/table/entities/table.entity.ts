@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Workspace } from '../../workspace/entities/workspace.entity';
 import { List } from '../../list/entities/list.entity';
+import { Card } from '../../card/entities/card.entity';
 
 @Entity()
 export class Table {
@@ -24,4 +25,7 @@ export class Table {
 
     @OneToMany(() => List, list => list.table)
     lists: List[];
+
+    @OneToMany(() => Card, card => card.table)
+    cards: Card[];
 }

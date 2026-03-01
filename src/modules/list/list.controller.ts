@@ -17,6 +17,11 @@ export class ListController {
     return this.listService.findAll();
   }
 
+  @Get('table/:tableId')
+  findAllByTable(@Param('tableId') tableId: string) {
+    return this.listService.findAllByTable(+tableId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.listService.findOne(+id);

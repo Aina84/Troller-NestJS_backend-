@@ -20,6 +20,12 @@ export class ListService {
     return this.listsRepository.find();
   }
 
+  async findAllByTable(tableId: number) : Promise<List[]> {
+    return this.listsRepository.find({
+      where: {tableId}
+    });
+  }
+
   async findOne(id: number) : Promise<List | null> {
     return this.listsRepository.findOneBy({id});
   }
